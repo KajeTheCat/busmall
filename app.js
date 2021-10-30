@@ -75,26 +75,34 @@ function renderBus() {
 }
 
 function handleBusClick(event) {
-    if (event.target === myContainer){
-        alert('stop that, click an image.');
+    if (event.target === myContainer) {
+      alert('Please click on an image');
     }
-    let clickedBus = event.target.alt;
     clicks++;
-    for (let i = 0; i < allBus.length; i++)
-        if (clickedBus === allBus[i].name){
-            allBus[i].vote++;
-            break;
-        }
-    renderBus();
-    if (clicks === clicksAllowed) {
-        myContainer.removeEventListener('click', handleBusClick);
-        myButton.addEventListener('click', handleButtonClick);
-        myButton.className = 'clicks-allowed';
+    let clickedBus = event.target.alt;
+    // array method .includes()
+    for (let i = 0; i < allGoats.length; i++) {
+      if (clickedBus === allBus[i].name) {
+        allBus[i].likes++;
+        break;
+      }
     }
-}
 
-function handleButtonClick() {
-    for (let i = 0; i < allBus.length; i++);
-}
-
-myContainer.addEventListener('click', handleBusClick);
+    if (clicks === clicksAllowed) {
+      myContainer.removeEventListener('click', handleBusClick);
+      myButton.addEventListener('click', handleButtonClick);
+      myButton.className = 'clicks-allowed';
+    }
+  }
+  
+  function handleButtonClick() {
+    for (let i = 0; i < allBus.length; i++) {
+      let li = document.createElement('li')
+      li.textContent = `${allBus[i].name} had ${allBus[i].views} view and was clicked ${allBus[i].likes} times.`;
+      results.appendChild(li);
+    };
+  }
+  
+  renderBus();
+  
+  myContainer.addEventListener('click', handleBusClick);

@@ -43,12 +43,6 @@ new Bus('tauntaun');
 new Bus('unicorn');
 new Bus('water-can');
 new Bus('wine-glass');
-new Bus();
-new Bus();
-new Bus();
-new Bus();
-new Bus();
-new Bus();
 
 //functions
 function selectRandomBus() {
@@ -59,7 +53,7 @@ function renderBus() {
     let bus1 = selectRandomBus();
     let bus2 = selectRandomBus();
     let bus3 = selectRandomBus();
-    while (bus1 === bus2 === bus3) {
+    while (bus1 === bus2 || bus1 === bus3 || bus2 === bus3) {
         bus2 = selectRandomBus();
         bus3 = selectRandomBus();
     }
@@ -71,7 +65,7 @@ function renderBus() {
     allBus[bus2].views++;
     image3.src = allBus[bus3].src;
     image3.alt = allBus[bus3].name;
-    allbus[bus3].views++;
+    allBus[bus3].views++;
 }
 
 function handleBusClick(event) {
@@ -80,7 +74,6 @@ function handleBusClick(event) {
     }
     clicks++;
     let clickedBus = event.target.alt;
-    // array method .includes()
     for (let i = 0; i < allGoats.length; i++) {
       if (clickedBus === allBus[i].name) {
         allBus[i].likes++;

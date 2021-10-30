@@ -3,24 +3,25 @@
 //global
 const myContainer = document.querySelector('section');
 const myButton = document.querySelector('section + div');
+const results = document.querySelector('ul');
 
 let image1 = document.querySelector('section img:first-child');
 let image2 = document.querySelector('section img:nth-child(2)');
 let image3 = document.querySelector('section img:nth-child(3)');
 
 let allBus = [];
-
-let clicks = 0
+let clicks = 0;
 const clicksAllowed = 25;
 
 //constructor
 
 function Bus(name, fileExtension = 'jpg') {
     this.name = name;
-    this.src = `${name}.${fileExtension}`;
+    this.src = `images/${name}.${fileExtension}`;
     this.vote = 0;
     this.views = 0;
     allBus.push(this);
+
 }
 
 //construction
@@ -46,7 +47,7 @@ new Bus('wine-glass');
 
 //functions
 function selectRandomBus() {
-    return Math.floor(math.random() * allBus.length);
+    return Math.floor(Math.random() * allBus.length);
 }
 
 function renderBus() {
@@ -74,12 +75,14 @@ function handleBusClick(event) {
     }
     clicks++;
     let clickedBus = event.target.alt;
-    for (let i = 0; i < allGoats.length; i++) {
+    for (let i = 0; i < allBus.length; i++) {
       if (clickedBus === allBus[i].name) {
-        allBus[i].likes++;
+        allBus[i].vote++;
         break;
       }
     }
+
+    renderBus();
 
     if (clicks === clicksAllowed) {
       myContainer.removeEventListener('click', handleBusClick);
@@ -91,7 +94,7 @@ function handleBusClick(event) {
   function handleButtonClick() {
     for (let i = 0; i < allBus.length; i++) {
       let li = document.createElement('li')
-      li.textContent = `${allBus[i].name} had ${allBus[i].views} view and was clicked ${allBus[i].likes} times.`;
+      li.textContent = `${allBus[i].name} had ${allBus[i].views} view and was clicked ${allBus[i].vote} times.`;
       results.appendChild(li);
     };
   }

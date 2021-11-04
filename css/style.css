@@ -37,7 +37,16 @@
 
   div {
     margin: auto;
-    border: 3px inset silver;
+    border: 6px inset silver;
+    background-color: whitesmoke;
+  }
+
+  .myChartBefore {
+    display: none;
+  }
+
+  .myChartAfter {
+    display: flex;
   }
 
   
@@ -61,27 +70,4 @@
   section img:hover {
     border: 5px solid black;
     cursor: pointer;
-  }
-  
-  /* results button */
-
-  section + div {
-    background-color: darkred;
-    color: lightgrey;
-    padding: .5rem 1rem;
-    width: max-content;
-    font-size: 1rem;
-    pointer-events: none;
-  }
-
-  section + div.clicks-allowed {
-    background-color: darkgreen;
-    border-style: outset;
-    color: white;
-    cursor: pointer;
-    pointer-events: auto;
-  }
-  
-  section + div.clicks-allowed:hover {
-    background-color: rgb(211, 187, 175)
   }

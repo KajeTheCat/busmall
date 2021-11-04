@@ -9,9 +9,12 @@ let image1 = document.querySelector('section img:first-child');
 let image2 = document.querySelector('section img:nth-child(2)');
 let image3 = document.querySelector('section img:nth-child(3)');
 
+let chartContainer = document.querySelector('div');
+
 let allBus = [];
 let clicks = 0;
 const clicksAllowed = 25;
+let productArray = [];
 
 //constructor
 
@@ -51,54 +54,92 @@ function selectRandomBus() {
 }
 
 function renderBus() {
-    let bus1 = selectRandomBus();
-    let bus2 = selectRandomBus();
-    let bus3 = selectRandomBus();
-    while (bus1 === bus2 || bus1 === bus3 || bus2 === bus3) {
-        bus2 = selectRandomBus();
-        bus3 = selectRandomBus();
+  while (productArray.length < 16) {
+    let ranNum = selectRandomBus();
+    if(!productArray.includes(ranNum)) {
+      productArray.push(ranNum);
     }
-    image1.src = allBus[bus1].src;
-    image1.alt = allBus[bus1].name;
-    allBus[bus1].views++;
-    image2.src = allBus[bus2].src;
-    image2.alt = allBus[bus2].name;
-    allBus[bus2].views++;
-    image3.src = allBus[bus3].src;
-    image3.alt = allBus[bus3].name;
-    allBus[bus3].views++;
+  }
+
+  let bus1 = productArray.shift();
+  let bus2 = productArray.shift();
+  let bus3 = productArray.shift();
+
+  image1.src = allBus[bus1].src;
+  image1.alt = allBus[bus1].name;
+  allBus[bus1].views++;
+  image2.src = allBus[bus2].src;
+  image2.alt = allBus[bus2].name;
+  allBus[bus2].views++;
+  image3.src = allBus[bus3].src;
+  image3.alt = allBus[bus3].name;
+  allBus[bus3].views++;
 }
 
 function handleBusClick(event) {
-    if (event.target === myContainer) {
-      alert('Please click on an image');
-    }
-    clicks++;
-    let clickedBus = event.target.alt;
-    for (let i = 0; i < allBus.length; i++) {
-      if (clickedBus === allBus[i].name) {
-        allBus[i].vote++;
-        break;
-      }
-    }
-
-    renderBus();
-
-    if (clicks === clicksAllowed) {
-      myContainer.removeEventListener('click', handleBusClick);
-      myButton.addEventListener('click', handleButtonClick);
-      myButton.className = 'clicks-allowed';
+  if (event.target === myContainer) {
+    alert('Please click on an image');
+  }
+  clicks++;
+  let clickedBus = event.target.alt;
+  for (let i = 0; i < allBus.length; i++) {
+    if (clickedBus === allBus[i].name) {
+      allBus[i].vote++;
+      break;
     }
   }
-  
-  function handleButtonClick() {
-    for (let i = 0; i < allBus.length; i++) {
-      let li = document.createElement('li')
-      li.textContent = `${allBus[i].name} had ${allBus[i].views} view and was clicked ${allBus[i].vote} times.`;
-      results.appendChild(li);
-    };
-  }
-  
+
   renderBus();
+
+  if (clicks === clicksAllowed) {
+    myContainer.removeEventListener('click', handleBusClick);
+    chartContainer.className = 'myChartAfter';
+    renderChart();
+  }
+}
+
+function renderChart() {
+  let productNames = [];
+  let productVotes = [];
+  let productViews = [];
+  for (let i = 0; i < allBus.length; i++) {
+    productNames.push(allBus[i].name);
+    productVotes.push(allBus[i].vote);
+    productViews.push(allBus[i].views);
+  }
+
+  const data = {
+    labels: productNames,
+    datasets: [{
+      label: 'Likes',
+      data: productVotes,
+      backgroundColor: ['rgba(176, 18, 160, 0.2)'],
+      borderColor: ['black'],
+      borderWidth: 1
+    },
+    {
+      label: 'Views',
+      data: productViews,
+      backgroundColor: ['rgba(49, 199, 74, 0.2)'],
+      borderColor: ['black'],
+      borderWidth: 1
+    }]
+  };
+  const config = {
+    type: 'bar',
+    data: data,
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    },
+  };
+  let canvasChart = document.getElementById('myChart');
+  const myChart = new Chart(canvasChart,config);
+}
+
+renderBus();
   
-  myContainer.addEventListener('click', handleBusClick);
+myContainer.addEventListener('click', handleBusClick);

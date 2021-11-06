@@ -19,12 +19,15 @@ let productArray = [];
 //constructor
 
 function Bus(name, fileExtension = 'jpg') {
-    this.name = name;
-    this.src = `images/${name}.${fileExtension}`;
-    this.vote = 0;
-    this.views = 0;
-    allBus.push(this);
-
+  this.name = name;
+  this.src = `images/${name}.${fileExtension}`;
+  this.vote = 0;
+  this.views = 0;
+  this.total = JSON.parse(localStorage.getItem(this.name)) || {
+    views: [],
+    vote: []
+  };
+  allBus.push(this);
 }
 
 //construction
@@ -76,6 +79,17 @@ function renderBus() {
   allBus[bus3].views++;
 }
 
+//Product storage
+
+Bus.prototype.storeToLocalStorage = function() {
+
+  this.total.views.push(this.views);
+  this.total.vote.push(this.vote);
+  localStorage.setItem(this.name, JSON.stringify(this.total));
+}
+
+//events
+
 function handleBusClick(event) {
   if (event.target === myContainer) {
     alert('Please click on an image');
@@ -94,6 +108,9 @@ function handleBusClick(event) {
   if (clicks === clicksAllowed) {
     myContainer.removeEventListener('click', handleBusClick);
     chartContainer.className = 'myChartAfter';
+    for (let i = 0; i < allBus.length; i++) {
+      allBus[i].storeToLocalStorage();
+    }   
     renderChart();
   }
 }
@@ -102,10 +119,17 @@ function renderChart() {
   let productNames = [];
   let productVotes = [];
   let productViews = [];
+  // console.log(allBus[0].total)
   for (let i = 0; i < allBus.length; i++) {
     productNames.push(allBus[i].name);
-    productVotes.push(allBus[i].vote);
-    productViews.push(allBus[i].views);
+    let eViews = 0;
+    let eVotes = 0;
+    for (let z = 0; z < allBus[i].total.views.length; z++) {
+      eViews += allBus[i].total.views[z];
+      eVotes += allBus[i].total.vote[z];
+    }
+    productViews.push(eViews);
+    productVotes.push(eVotes);
   }
 
   const data = {

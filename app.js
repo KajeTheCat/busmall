@@ -30,6 +30,8 @@ function Bus(name, fileExtension = 'jpg') {
   allBus.push(this);
 }
 
+console.log(allBus)
+
 //construction
 new Bus('bag');
 new Bus('banana');
